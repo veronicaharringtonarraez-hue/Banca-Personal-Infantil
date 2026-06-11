@@ -141,6 +141,6 @@
     CHILDREN, EXPENSES, PERCENT_DUES, CHORES, BADGES, evaluateBadges,
     EXAM_BONUS_MAX, examBonus, fixedTotal, money,
     MONTHS, monthKey, monthLabel,
-    DEFAULT_PIN: "1234",
+    DEFAULT_PIN: "181215",
   };
 })();

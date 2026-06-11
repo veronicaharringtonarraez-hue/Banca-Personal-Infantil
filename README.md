@@ -13,6 +13,16 @@ falta ningún botón de "guardar": los cambios quedan solos.
 > Importante: los datos viven en el navegador donde la usas. Si abres la app en
 > otro teléfono o computadora, ese dispositivo empieza limpio.
 
+### Respaldo y pasar datos a otro dispositivo
+
+En **Modo Mamá/Papá → 💾 Respaldo de datos**:
+
+- **⬇️ Descargar respaldo:** guarda un archivo con toda la información.
+- **⬆️ Restaurar desde un archivo:** carga ese archivo en otro dispositivo (o
+  para recuperar datos). Reemplaza lo que haya en ese navegador.
+
+Es buena idea descargar un respaldo de vez en cuando para no perder nada.
+
 ## Cómo usarla en internet (GitHub Pages)
 
 La app ya está lista para publicarse gratis con una dirección web. Para activarla
@@ -31,7 +41,7 @@ pantalla de inicio.
 ## Cómo editar los presupuestos mes a mes
 
 1. Abre la app y toca el botón **👩‍👧‍👦 Mamá/Papá** (arriba a la derecha).
-2. Ingresa el PIN (por defecto **1234**, lo puedes cambiar ahí mismo).
+2. Ingresa el PIN (por defecto **181215**, lo puedes cambiar ahí mismo).
 3. Elige al niño con las pestañas de arriba.
 4. En la tarjeta **📊 Presupuesto de [niño]** cambia el monto de cada gasto
    (Alquiler, Alimentación, etc.). Se guarda solo al salir del campo.

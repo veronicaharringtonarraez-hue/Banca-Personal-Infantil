@@ -49,6 +49,7 @@ function ParentPanel({ onClose }) {
         </Card>
 
         <ChangePin actions={actions} currentPin={state.pin} fx={fx} />
+        <Backup state={state} actions={actions} fx={fx} />
 
         <Card className="bc-padmin danger">
           <button className="bc-admin-btn danger" onClick={() => {
@@ -250,14 +251,70 @@ function ChangePin({ actions, currentPin, fx }) {
     <Card className="bc-padmin">
       <div className="bc-padmin-title">🔒 PIN de adulto</div>
       {!open
-        ? <button className="bc-admin-btn" onClick={() => { setV(""); setOpen(true); }}>Cambiar PIN (actual: ••••)</button>
+        ? <button className="bc-admin-btn" onClick={() => { setV(""); setOpen(true); }}>Cambiar PIN</button>
         : <div className="bc-pin-change">
-            <input className="bc-input num" inputMode="numeric" maxLength={4} placeholder="Nuevo PIN (4 dígitos)" value={v} onChange={(e) => setV(e.target.value.replace(/\D/g, "").slice(0, 4))} />
+            <input className="bc-input num" inputMode="numeric" maxLength={6} placeholder="Nuevo PIN (4 a 6 dígitos)" value={v} onChange={(e) => setV(e.target.value.replace(/\D/g, "").slice(0, 6))} />
             <div className="bc-two-btn">
-              <button className="bc-btn-primary" disabled={v.length !== 4} onClick={() => { actions.setPin(v); setOpen(false); fx.toast("PIN actualizado 🔒"); }}>Guardar</button>
+              <button className="bc-btn-primary" disabled={v.length < 4} onClick={() => { actions.setPin(v); setOpen(false); fx.toast("PIN actualizado 🔒"); }}>Guardar</button>
               <button className="bc-btn-ghost" onClick={() => setOpen(false)}>Cancelar</button>
             </div>
           </div>}
+    </Card>
+  );
+}
+
+function exportBackup(state) {
+  const json = JSON.stringify(state, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const d = new Date();
+  const stamp = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  a.href = url;
+  a.download = "banco-crece-respaldo-" + stamp + ".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function Backup({ state, actions, fx }) {
+  const fileRef = useRef(null);
+
+  const onFile = (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = ""; // permite volver a elegir el mismo archivo
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      let parsed;
+      try { parsed = JSON.parse(reader.result); }
+      catch (err) { fx.toast("El archivo no es un respaldo válido"); return; }
+      if (!parsed || typeof parsed !== "object" || !parsed.data) {
+        fx.toast("El archivo no es un respaldo válido"); return;
+      }
+      if (confirm("¿Reemplazar TODOS los datos actuales (saldos, ahorros, presupuestos, etc.) con los del archivo? Esto no se puede deshacer.")) {
+        actions.importData(parsed);
+        fx.toast("Datos restaurados ✅");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  return (
+    <Card className="bc-padmin">
+      <div className="bc-padmin-title">💾 Respaldo de datos</div>
+      <p className="bc-muted">
+        Descarga una copia de todo (saldos, ahorros, presupuestos, logros…) para no perderla
+        o para pasarla a otro teléfono o computadora. Guárdala en un lugar seguro.
+      </p>
+      <button className="bc-admin-btn" onClick={() => { exportBackup(state); fx.toast("Respaldo descargado ⬇️"); }}>
+        ⬇️ Descargar respaldo
+      </button>
+      <button className="bc-admin-btn" onClick={() => fileRef.current && fileRef.current.click()}>
+        ⬆️ Restaurar desde un archivo
+      </button>
+      <input ref={fileRef} type="file" accept="application/json,.json" style={{ display: "none" }} onChange={onFile} />
     </Card>
   );
 }
