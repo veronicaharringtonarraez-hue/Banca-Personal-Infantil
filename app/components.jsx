@@ -54,13 +54,13 @@ function Modal({ open, onClose, title, children, accent = "var(--brand)", wide =
   );
 }
 
-function PinPad({ onSubmit, error, prompt = "Ingresa el PIN de Mamá/Papá" }) {
+function PinPad({ onSubmit, error, prompt = "Ingresa el PIN de Mamá/Papá", length = 4 }) {
   const [pin, setPin] = useState("");
   const press = (d) => {
     setPin((prev) => {
-      if (prev.length >= 4) return prev;
+      if (prev.length >= length) return prev;
       const np = prev + d;
-      if (np.length === 4) {
+      if (np.length === length) {
         setTimeout(() => { onSubmit(np); setPin(""); }, 140);
       }
       return np;
@@ -71,7 +71,7 @@ function PinPad({ onSubmit, error, prompt = "Ingresa el PIN de Mamá/Papá" }) {
     <div className="bc-pinpad">
       <p className="bc-pin-prompt">{prompt}</p>
       <div className="bc-pin-dots">
-        {[0, 1, 2, 3].map((i) => (
+        {Array.from({ length }, (_, i) => (
           <span key={i} className={"bc-pin-dot " + (i < pin.length ? "on" : "")} />
         ))}
       </div>

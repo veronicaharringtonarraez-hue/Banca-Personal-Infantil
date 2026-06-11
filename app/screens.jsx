@@ -180,7 +180,7 @@ function ScreenGanar({ child, approval = "pedidos" }) {
       </div>
 
       <Modal open={pinOpen} onClose={() => setPinOpen(false)} title="Aprobación de un adulto" accent={child.color}>
-        <PinPad onSubmit={approvePin} error={pinErr} prompt={`Confirma que ${child.name} ganó ${BC.money(total)}`} />
+        <PinPad onSubmit={approvePin} error={pinErr} length={state.pin.length} prompt={`Confirma que ${child.name} ganó ${BC.money(total)}`} />
       </Modal>
     </div>
   );
@@ -331,7 +331,7 @@ function ScreenAhorro({ child }) {
           <div className="bc-amount-val">{BC.money(wAmt)}</div>
           <button onClick={() => setWAmt((a) => Math.min(s.savings, a + 1))}>+</button>
         </div>
-        <PinPad onSubmit={withdraw} error={wErr} prompt="PIN de Mamá/Papá para retirar" />
+        <PinPad onSubmit={withdraw} error={wErr} length={state.pin.length} prompt="PIN de Mamá/Papá para retirar" />
       </Modal>
     </div>
   );

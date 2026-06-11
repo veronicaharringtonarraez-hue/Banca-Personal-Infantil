@@ -180,7 +180,8 @@ function PinChecker({ onOk, onErr, error }) {
   return (
     <PinPad
       error={error}
-      prompt="Ingresa el PIN (por defecto: 1234)"
+      length={state.pin.length}
+      prompt="Ingresa el PIN de Mamá/Papá"
       onSubmit={(pin) => { if (pin === state.pin) onOk(); else onErr("PIN incorrecto, intenta otra vez"); }}
     />
   );

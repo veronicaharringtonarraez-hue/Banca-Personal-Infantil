@@ -29,23 +29,28 @@ function defaultState() {
   };
 }
 
+// Construye un estado válido a partir de datos externos (localStorage o respaldo).
+function mergeState(parsed) {
+  const base = defaultState();
+  if (!parsed || typeof parsed !== "object") return base;
+  // merge defensivo
+  base.pin = parsed.pin || base.pin;
+  base.goals = Object.assign(base.goals, parsed.goals || {});
+  base.budgets = (parsed.budgets && typeof parsed.budgets === "object") ? parsed.budgets : {};
+  base.requests = Array.isArray(parsed.requests) ? parsed.requests : [];
+  BC.CHILDREN.forEach((c) => {
+    if (parsed.data && parsed.data[c.id]) {
+      base.data[c.id] = Object.assign(freshChild(), parsed.data[c.id]);
+    }
+  });
+  return base;
+}
+
 function load() {
   try {
     const raw = localStorage.getItem(STORE_KEY);
     if (!raw) return defaultState();
-    const parsed = JSON.parse(raw);
-    const base = defaultState();
-    // merge defensivo
-    base.pin = parsed.pin || base.pin;
-    base.goals = Object.assign(base.goals, parsed.goals || {});
-    base.budgets = (parsed.budgets && typeof parsed.budgets === "object") ? parsed.budgets : {};
-    base.requests = Array.isArray(parsed.requests) ? parsed.requests : [];
-    BC.CHILDREN.forEach((c) => {
-      if (parsed.data && parsed.data[c.id]) {
-        base.data[c.id] = Object.assign(freshChild(), parsed.data[c.id]);
-      }
-    });
-    return base;
+    return mergeState(JSON.parse(raw));
   } catch (e) {
     return defaultState();
   }
@@ -233,6 +238,9 @@ function StoreProvider({ children }) {
       update(childId, (child, month, mk) => {
         child.months[mk] = freshMonth();
       });
+    },
+    importData(parsed) {
+      setState(() => mergeState(parsed));
     },
     resetAll() {
       if (typeof window !== "undefined") {
