@@ -3,6 +3,20 @@
 App para enseñar economía a los niños (Taylor, Emmeth y Christopher): ganar dinero
 con tareas, pagar gastos, ahorrar para una meta, diezmo, presupuesto y logros.
 
+## Instalar como app "ChildBank" (ícono en el Escritorio)
+
+La app es **instalable**. Una vez abierta la dirección en internet:
+
+- **Computadora (Chrome/Edge):** aparece un ícono de instalar ⊕ en la barra de
+  direcciones, o ve al menú **⋮ → Guardar y compartir → Instalar / Crear acceso
+  directo** (marca "Abrir como ventana"). Se crea el ícono **ChildBank** en el
+  Escritorio.
+- **iPhone/iPad (Safari):** botón **Compartir → Añadir a pantalla de inicio**.
+- **Android (Chrome):** menú **⋮ → Instalar aplicación / Añadir a pantalla de inicio**.
+
+El ícono se toma de `icons/childbank-512.png`. Si quieres cambiarlo, reemplaza
+ese archivo (PNG 512×512).
+
 ## ¿Dónde se guardan los datos?
 
 Todo se guarda **automáticamente en el navegador** (almacenamiento local del
