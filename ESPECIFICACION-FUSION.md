@@ -162,3 +162,60 @@ el reinicio diario/semanal **no pague dos veces**.
 - **D3 — Nube → LOCAL PRIMERO.** El banco arranca guardando solo en el navegador
   (`localStorage`), como ahora. Firebase para el banco queda como fase futura.
 - **D4 — Conversión → 1 punto = 1 crédito = +1 mérito** (ajustable).
+
+## 11. Anexo técnico — mapeo al código real del Hogar
+*(Basado en `app.jsx`, `data.js`, `cloud-sync.js` aportados.)*
+
+### 11.1 Archivos del Hogar
+- Niños: `index.html` + `app.jsx`. Padres: `Panel Padres.html` + `admin.jsx`.
+- `data.js`: `FAMILY`, `TASKS`, `PERSONAL`/`PERSONAL_DEFS`, `DISTRIBUTIONS`,
+  `REWARDS`, `LEVELS`, `MOODS`, `BONUSES`, modelo `marks`, `PARENT_PIN`.
+- `cloud-sync.js`: Firebase; intercepta `localStorage.setItem` de la clave
+  `fam_tareas_v1` y sincroniza. `images.js`, `micro-app.jsx`, `micro-data.js`, `assets/`.
+
+### 11.2 Estado y puntos actuales
+- Clave `localStorage`: **`fam_tareas_v1`**, forma `{ profile, dist, tab, week, done, custom }`.
+- `done` = `{ "pid:taskId": true }`. **Reinicio semanal** vía `weekKey()` (cuando
+  cambia la semana, `done = {}`).
+- Puntos: `pointsFor(pid, dist, done) = nº de done × POINTS_PER_TASK` (PPT = **10**).
+- Calidad/aprobación: `marks[pid:taskId] = { s:'claim'|'ok', o:0..5, c:0..5 }`,
+  `markPoints = o+c si 'ok'` (vive en `admin.jsx`, Panel de Padres).
+- `REWARDS` (mascotas) se desbloquean por puntos semanales; `LEVELS`, `MOODS`, `BONUSES` existen.
+
+### 11.3 Mapeo de los dos indicadores al código existente
+- **Mérito (no se gasta):** reutilizar lo que YA existe → puntos semanales
+  (`pointsFor` sobre `done`, se reinicia con `weekKey`, no lo toca el gasto) +
+  bonos (`BONUSES`). Elegibilidad mascotas = mérito ≥ 50 **y** `done/total ≥ 80%`.
+- **Créditos (se gastan):** saldo del banco (clave aparte **`bancoCrece.v1`**).
+
+### 11.4 El puente (idempotente) — punto de enganche exacto
+- Acreditar al banco **cuando un adulto aprueba** (en `admin.jsx`, donde `marks`
+  pasa a `s:'ok'`; o un botón "acreditar"). Llamar:
+  `Bank.creditForTask(pid, taskId, puntosFinales, weekKey())`.
+- **Anti-doble-pago:** guardar en el store del banco un set
+  `paid["{week}:{pid}:{taskId}"] = true`. La clave incluye la **semana** porque
+  `done` se reinicia semanalmente (reabrir/re-marcar no debe re-pagar).
+- `puntosFinales` = puntaje flexible aprobado (ver 11.6); por defecto 10.
+
+### 11.5 Cuentas y PIN
+- Cuentas del banco = `window.FAMILY` (no la lista propia del banco). Niños =
+  `isKid` (taylor, emmeth, christopher); adultos mama/papa con cuenta; Rachel
+  (`isBaby`) administrada por padres. → Adaptar `BC.CHILDREN` para derivarse de `FAMILY`.
+- **PIN único:** `PARENT_PIN` hoy es `'0904'`; unificar a **`181215`** y que el
+  banco use el mismo.
+
+### 11.6 Puntaje flexible (mejora nueva)
+- Hoy el puntaje es plano (10/tarea). La visión nueva: **base 10 por área,
+  ajustable ➕/➖ sin tope, con motivos e historial**. Extiende/eleva el modelo
+  `marks` (que hoy topa en o+c ≤ 10). El número final aprobado es el que va a
+  **créditos y mérito**.
+
+### 11.7 Choques técnicos a resolver al unir
+- Ambos archivos declaran `App`, `Avatar`, `Confetti` y `const STORE_KEY`
+  (`'fam_tareas_v1'` vs `'bancoCrece.v1'`) → **colisión** si se cargan en el mismo
+  ámbito Babel. **Namespingar el banco** (IIFE/prefijos) antes de unir.
+- **Una sola raíz React:** el banco hace su propio `ReactDOM.createRoot`. Al unir,
+  NO montar dos raíces: renderizar las pantallas del banco **dentro de un tab**.
+- `BottomNav` tiene los items hardcodeados → agregar `['banco','🏦','Banco']`.
+- `cloud-sync.js` solo sincroniza `fam_tareas_v1`. Con D3 (banco local) está bien;
+  para nube futura, extender cloud-sync para también sincronizar `bancoCrece.v1`.
