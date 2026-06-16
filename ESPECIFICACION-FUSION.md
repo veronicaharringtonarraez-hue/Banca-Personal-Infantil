@@ -121,8 +121,11 @@ bono, metas, PIN, respaldo), guardado automático.
    (evita pago doble).
 2. **Indicador de Mérito** nuevo (semanal, no se gasta) + pantalla de privilegios.
 3. **Tienda de recompensas** (canje de créditos por lo opcional de §6).
-4. **Gastos obligatorios:** las necesidades pasan a ser **gratis** (informativas),
-   no se "pagan" con puntos. → Ver decisión pendiente D1.
+4. **Gastos — se conservan AMBOS (decisión D1):** se mantiene el simulador
+   educativo de presupuesto (pagar alquiler/comida/diezmo con la regla
+   70/10/10/10) como **"modo aprendizaje" opcional**, **y además** se agrega la
+   **Tienda de recompensas** (§6) para lo opcional. El simulador es solo
+   educativo; no condiciona necesidades reales.
 5. **Cuentas:** la lista de cuentas se toma de la FAMILIA (incluye a Maykol y
    Verónica), no solo los 3 niños.
 6. **PIN único** de adulto (181215) para todo.
@@ -150,17 +153,12 @@ el reinicio diario/semanal **no pague dos veces**.
 6. **Tienda de recompensas** y catálogo configurable. Necesidades gratis.
 7. Respaldo que incluya ambos almacenes. Desplegar en Pages.
 
-## 10. Decisiones pendientes
-- **D1 — Gastos obligatorios vs. simulador educativo.** El banco actual tiene un
-  "Pagar gastos" (alquiler, comida, diezmo…) con fin **educativo** (regla
-  70/10/10/10). Tu nueva filosofía dice que las necesidades son **gratis**.
-  ¿Qué prefieres?
-  - (a) Reemplazar "Pagar gastos" por la **Tienda de recompensas** (necesidades
-    gratis). *Más alineado con tu visión.*
-  - (b) **Conservar** el simulador de presupuesto como "modo aprendizaje"
-    opcional **y además** agregar la tienda.
-- **D2 — Mérito.** ¿Confirmas que es **semanal** y que la elegibilidad de
-  mascotas usa ≥50 mérito/semana y ≥80% de tareas? (valores ajustables)
-- **D3 — Nube para el banco.** ¿El banco también sincroniza con Firebase como el
-  Hogar, o arranca solo local? (recomendado: local primero)
-- **D4 — Conversión.** ¿1 punto = 1 crédito = +1 mérito (recomendado), u otra?
+## 10. Decisiones (resueltas)
+- **D1 — Gastos → CONSERVAR AMBOS.** Se mantiene el simulador educativo de
+  presupuesto (pagar alquiler/comida/diezmo, regla 70/10/10/10) como "modo
+  aprendizaje" opcional **y** se agrega la Tienda de recompensas. Ver §7.4.
+- **D2 — Mérito → semanal.** Elegibilidad de mascotas: **≥ 50 mérito/semana** y
+  **≥ 80% de tareas asignadas** (valores ajustables por el administrador).
+- **D3 — Nube → LOCAL PRIMERO.** El banco arranca guardando solo en el navegador
+  (`localStorage`), como ahora. Firebase para el banco queda como fase futura.
+- **D4 — Conversión → 1 punto = 1 crédito = +1 mérito** (ajustable).
